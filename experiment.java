@@ -39,13 +39,13 @@ public class Game {
     }
 
     public void update() {
-        watchForStart();
+        lookForForStart();
 
         if (!started)
             return;
 
-        watchForPause();
-        watchForReset();
+        lookForForPause();
+        lookForForReset();
 
         if (paused)
             return;
@@ -69,13 +69,13 @@ public class Game {
         return renders;
     }
 
-    private void watchForStart() {
+    private void lookForForStart() {
         if (!started && keyboard.isDown(KeyEvent.VK_SPACE)) {
             started = true;
         }
     }
 
-    private void watchForPause() {
+    private void lookForForPause() {
         if (pauseDelay > 0)
             pauseDelay--;
 
@@ -85,7 +85,7 @@ public class Game {
         }
     }
 
-    private void watchForReset() {
+    private void lookForForReset() {
         if (restartDelay > 0)
             restartDelay--;
 
