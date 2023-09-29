@@ -3,56 +3,56 @@ import java.util.ArrayList;
 
 public class Game {
 
-    public static final int PIPE_DELAY = 100;
+    public static final int a = 100;
 
-    private Boolean paused;
+    private Boolean b;
 
-    private int pauseDelay;
-    private int restartDelay;
-    private int pipeDelay;
+    private int c;
+    private int d;
+    private int e;
 
-    private Bird bird;
-    private ArrayList<Pipe> pipes;
-    private Keyboard keyboard;
+    private Bird f;
+    private ArrayList<Pipe> g;
+    private Keyboard h;
 
-    public int score;
-    public Boolean gameover;
-    public Boolean started;
+    public int i;
+    public Boolean j;
+    public Boolean k;
 
     public Game() {
-        keyboard = Keyboard.getInstance();
+        h = Keyboard.getInstance();
         restart();
     }
 
     public void restart() {
-        paused = false;
-        started = false;
-        gameover = false;
+        b = false;
+        k = false;
+        j = false;
 
-        score = 0;
-        pauseDelay = 0;
-        restartDelay = 0;
-        pipeDelay = 0;
+        i = 0;
+        c = 0;
+        d = 0;
+        e = 0;
 
-        bird = new Bird();
-        pipes = new ArrayList<Pipe>();
+        f = new Bird();
+        g = new ArrayList<Pipe>();
     }
 
     public void update() {
         lookForForStart();
 
-        if (!started)
+        if (!k)
             return;
 
         lookForForPause();
         lookForForReset();
 
-        if (paused)
+        if (b)
             return;
 
-        bird.update();
+        f.update();
 
-        if (gameover)
+        if (j)
             return;
 
         movePipes();
@@ -62,50 +62,50 @@ public class Game {
     public ArrayList<Render> getRenders() {
         ArrayList<Render> renders = new ArrayList<Render>();
         renders.add(new Render(0, 0, "lib/background.png"));
-        for (Pipe pipe : pipes)
+        for (Pipe pipe : g)
             renders.add(pipe.getRender());
         renders.add(new Render(0, 0, "lib/foreground.png"));
-        renders.add(bird.getRender());
+        renders.add(f.getRender());
         return renders;
     }
 
     private void lookForForStart() {
-        if (!started && keyboard.isDown(KeyEvent.VK_SPACE)) {
-            started = true;
+        if (!k && h.isDown(KeyEvent.VK_SPACE)) {
+            k = true;
         }
     }
 
     private void lookForForPause() {
-        if (pauseDelay > 0)
-            pauseDelay--;
+        if (c > 0)
+            c--;
 
-        if (keyboard.isDown(KeyEvent.VK_P) && pauseDelay <= 0) {
-            paused = !paused;
-            pauseDelay = 10;
+        if (h.isDown(KeyEvent.VK_P) && c <= 0) {
+            b = !b;
+            c = 10;
         }
     }
 
     private void lookForForReset() {
-        if (restartDelay > 0)
-            restartDelay--;
+        if (d > 0)
+            d--;
 
-        if (keyboard.isDown(KeyEvent.VK_R) && restartDelay <= 0) {
+        if (h.isDown(KeyEvent.VK_R) && d <= 0) {
             restart();
-            restartDelay = 10;
+            d = 10;
             return;
         }
     }
 
     private void movePipes() {
-        pipeDelay--;
+        e--;
 
-        if (pipeDelay < 0) {
-            pipeDelay = PIPE_DELAY;
+        if (e < 0) {
+            e = a;
             Pipe northPipe = null;
             Pipe southPipe = null;
 
-            // Look for pipes off the screen
-            for (Pipe pipe : pipes) {
+            // Look for g off the screen
+            for (Pipe pipe : g) {
                 if (pipe.x - pipe.width < 0) {
                     if (northPipe == null) {
                         northPipe = pipe;
@@ -118,7 +118,7 @@ public class Game {
 
             if (northPipe == null) {
                 Pipe pipe = new Pipe("north");
-                pipes.add(pipe);
+                g.add(pipe);
                 northPipe = pipe;
             } else {
                 northPipe.reset();
@@ -126,7 +126,7 @@ public class Game {
 
             if (southPipe == null) {
                 Pipe pipe = new Pipe("south");
-                pipes.add(pipe);
+                g.add(pipe);
                 southPipe = pipe;
             } else {
                 southPipe.reset();
@@ -135,26 +135,26 @@ public class Game {
             northPipe.y = southPipe.y + southPipe.height + 175;
         }
 
-        for (Pipe pipe : pipes) {
+        for (Pipe pipe : g) {
             pipe.update();
         }
     }
 
     private void checkForCollisions() {
 
-        for (Pipe pipe : pipes) {
-            if (pipe.collides(bird.x, bird.y, bird.width, bird.height)) {
-                gameover = true;
-                bird.dead = true;
-            } else if (pipe.x == bird.x && pipe.orientation.equalsIgnoreCase("south")) {
-                score++;
+        for (Pipe pipe : g) {
+            if (pipe.collides(f.x, f.y, f.width, f.height)) {
+                j = true;
+                f.dead = true;
+            } else if (pipe.x == f.x && pipe.orientation.equalsIgnoreCase("south")) {
+                i++;
             }
         }
 
         // Ground + Bird collision
-        if (bird.y + bird.height > App.HEIGHT - 80) {
-            gameover = true;
-            bird.y = App.HEIGHT - 80 - bird.height;
+        if (f.y + f.height > App.HEIGHT - 80) {
+            j = true;
+            f.y = App.HEIGHT - 80 - f.height;
         }
     }
 }
